@@ -1,0 +1,13 @@
+.status-green {
+    background-color: green;
+    color: white;
+  }
+  
+  .status-yellow {
+    background-color: yellow;
+  }
+  
+  .status-gray {
+    background-color: gray;
+  }
+  
