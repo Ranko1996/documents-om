@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsCalendar } from "react-icons/bs";
 import "./add.css";
 
-const Add = ({ setOpen, setDocuments }) => {
+const Add = ({ setOpen, setContracts }) => {
   const [documentName, setDocumentName] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [contractNumber, setContractNumber] = useState("");
@@ -34,7 +34,7 @@ const Add = ({ setOpen, setDocuments }) => {
       }
 
       // Dodavanje novog dokumenta u stanje aplikacije
-      setDocuments(currentDocuments => [...currentDocuments, newDocument]);
+      setContracts(currentDocuments => [...currentDocuments, newDocument]);
       setOpen(false);
     } catch (error) {
       console.error('There was a problem adding the document:', error);

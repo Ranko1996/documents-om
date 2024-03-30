@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BsEnvelopePaperFill, BsSearch, BsPlus } from 'react-icons/bs';
 import Add from "./components/add/Add"
 
-function Header({ OpenSidebar }) {
+function Header({ setContracts }) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleAddModalOpen = () => {
@@ -26,7 +26,7 @@ function Header({ OpenSidebar }) {
       </div>
 
       {/* Prikaz modala za dodavanje dokumenta ako je isAddModalOpen true */}
-      {isAddModalOpen && <Add setOpen={setIsAddModalOpen} />}
+      {isAddModalOpen && <Add setOpen={setIsAddModalOpen} setContracts={setContracts} />}
     </header>
   );
 }
