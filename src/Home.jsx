@@ -7,7 +7,8 @@ import
  from 'recharts';
  import AccessibleTable from './components/dataTable/DataTable'
 
-function Home() {
+function Home({contracts}) {
+  console.log(contracts);
 
     const data = [
         {
@@ -60,7 +61,6 @@ function Home() {
         <div className='main-title'>
             <h3>DASHBOARD</h3>
         </div>
-        <AccessibleTable />
 
         <div className='main-cards'>
             <div className='card'>
@@ -92,11 +92,13 @@ function Home() {
                 <h1>42</h1>
             </div>
         </div>
+        
+        <AccessibleTable contracts={contracts} />
 
         <div className='charts'>
             <ResponsiveContainer width="100%" height="100%">
             <BarChart
-            width={500}
+            width={300}
             height={300}
             data={data}
             margin={{
@@ -116,27 +118,7 @@ function Home() {
                 </BarChart>
             </ResponsiveContainer>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                width={500}
-                height={300}
-                data={data}
-                margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-                >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                </LineChart>
-            </ResponsiveContainer>
+            {/* <AccessibleTable /> */}
 
         </div>
     </main>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,28 +6,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
 import { BsTrash, BsPencil } from 'react-icons/bs'; // Importanje ikona
 
-const DataTable = () => {
-    const [contracts, setContracts] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:8080/ugovori')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setContracts(data); // Assuming the response data is an array of contracts
-            })
-            .catch(error => {
-                console.error('There was a problem fetching the contracts:', error);
-            });
-    }, []);
+const DataTable = ({ contracts }) => {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -50,29 +35,36 @@ const DataTable = () => {
         // Implementacija funkcije za brisanje
     };
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
     return (
-        <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px', backgroundColor: '#192841' }}> {/* Stilizirani kontejner tablice */}
+        <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
             <Table aria-label="caption table">
-                <caption style={{ color: 'white' }}>Popis ugovora</caption>
+                <caption>Popis ugovora</caption>
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{ color: 'white' }}>Kupac</TableCell>
-                        <TableCell align="right" style={{ color: 'white' }}>Broj ugovora</TableCell>
-                        <TableCell align="right" style={{ color: 'white' }}>Datum akontacije</TableCell>
-                        <TableCell align="right" style={{ color: 'white' }}>Rok isporuke</TableCell>
-                        <TableCell align="right" style={{ color: 'white' }}>Status</TableCell>
-                        <TableCell align="center" style={{ color: 'white' }}>Akcije</TableCell> {/* Dodani stupac za akcije */}
+                        <TableCell>Kupac</TableCell>
+                        <TableCell align="right">Broj ugovora</TableCell>
+                        <TableCell align="right">Rok isporuke</TableCell>
+                        <TableCell align="right">Status</TableCell>
+                        <TableCell align="center">Akcije</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {contracts.map((row) => (
+                    {contracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell component="th" scope="row" style={{ color: 'white' }}>
+                            <TableCell component="th" scope="row">
                                 {row.kupac}
                             </TableCell>
-                            <TableCell align="right" style={{ color: 'white' }}>{row.brojUgovora}</TableCell> {/* Promijenjeno */}
-                            <TableCell align="right" style={{ color: 'white' }}>{row.datumAkontacije}</TableCell> {/* Promijenjeno */}
-                            <TableCell align="right" style={{ color: 'white' }}>{row.rokIsporuke}</TableCell> {/* Promijenjeno */}
+                            <TableCell align="right">{row.brojUgovora}</TableCell>
+                            <TableCell align="right">{row.rokIsporuke}</TableCell>
                             <TableCell align="right">
                                 <Button
                                     variant="outlined"
@@ -92,6 +84,15 @@ const DataTable = () => {
                     ))}
                 </TableBody>
             </Table>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={contracts.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </TableContainer>
     );
 }
