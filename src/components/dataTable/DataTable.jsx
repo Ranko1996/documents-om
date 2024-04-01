@@ -10,7 +10,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
 import { BsTrash, BsPencil } from 'react-icons/bs'; // Importanje ikona
 
-const DataTable = ({ contracts }) => {
+const DataTable = ({ contracts, setContracts }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -31,10 +31,30 @@ const DataTable = ({ contracts }) => {
         // Implementacija funkcije za uređivanje
     };
 
-    const handleDelete = (id) => {
-        // Implementacija funkcije za brisanje
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Jeste li sigurni da želite izbrisati ovaj ugovor?");
+        if (confirmDelete) {
+            try {
+                const response = await fetch(`http://localhost:8080/deleteContract/${id}`, {
+                    method: 'DELETE',
+                });
+                if (!response.ok) {
+                    throw new Error('Something went wrong with the deletion process');
+                }
+                // Ako je brisanje uspješno, ažurirajte stanje
+                setContracts(prevContracts => prevContracts.filter(contract => contract.id !== id));
+    
+                alert("Ugovor je uspješno izbrisan.");
+            } catch (error) {
+                console.error('Failed to delete the contract:', error);
+                alert("Došlo je do pogreške pri brisanju ugovora.");
+            }
+        }
     };
-
+    
+    
+       
+    
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };

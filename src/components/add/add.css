@@ -1,10 +1,10 @@
 .add {
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.724);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,61 +12,75 @@
 }
 
 .add .modal {
-  padding: 50px;
-  border-radius: 10px;
-  background-color: black; 
-  position: relative;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: auto;
+  max-width: 500px;
 }
 
 .add .modal h1 {
-  margin-bottom: 40px;
-  font-size: 24px;
-  color: black;
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 30px;
 }
 
 .add .modal .close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  z-index: 100;
+  top: 20px;
+  right: 20px;
   cursor: pointer;
+  font-size: 24px;
+  color: #333;
 }
 
+
 .add .modal form {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
   max-width: 500px;
-  justify-content: space-between;
+  margin: auto;
 }
 
 .add .modal form .item {
-  width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
 }
 
-.add .modal form .item label {
-  font-size: 14px;
+.add .modal form .item.full-width {
+  grid-column: 1 / -1;
 }
 
-.add .modal form .item input, 
+.add .modal form .item input,
 .add .modal form .item select {
-  padding: 10px;
-  background-color: transparent;
-  color: white;
-  outline: none;
-  border: 1px solid /* Ovdje ubacite vrijednost za $soft-color */;
-  border-radius: 3px;
-}
-
-.add .modal form .item select option {
-  background-color: black; 
-  color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
 }
 
 .add .modal form button {
-  width: 100%;
-  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 16px;
+  margin-top: 20px;
   cursor: pointer;
+  grid-column: 1 / -1; /* Dugme zauzima cijelu širinu */
+}
+
+/* Responzivni dizajn za male ekrane */
+@media (max-width: 600px) {
+  .add .modal form {
+    grid-template-columns: 1fr; /* Jedna kolona za male ekrane */
+  }
+
+  .add .modal {
+    max-width: 90%; /* Širi modal na malim ekranima */
+  }
 }

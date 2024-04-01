@@ -1,16 +1,33 @@
-import React, { useState } from "react";
-import { BsCalendar } from "react-icons/bs";
+import React, { useState, useRef, useEffect } from "react";
 import "./add.css";
 
 const Add = ({ setOpen, setContracts }) => {
-  const [documentName, setDocumentName] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [contractNumber, setContractNumber] = useState("");
   const [startDate, setStartDate] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
+  const modalRef = useRef();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!customerName || !contractNumber || !startDate || !deliveryDate) {
+      alert("Molimo popunite sva polja.");
+      return;
+    }
 
     const newDocument = {
       kupac: customerName,
@@ -33,7 +50,6 @@ const Add = ({ setOpen, setContracts }) => {
         throw new Error('Network response was not ok');
       }
 
-      // Dodavanje novog dokumenta u stanje aplikacije
       setContracts(currentDocuments => [...currentDocuments, newDocument]);
       setOpen(false);
     } catch (error) {
@@ -43,55 +59,47 @@ const Add = ({ setOpen, setContracts }) => {
 
   return (
     <div className="add">
-      <div className="modal">
+      <div className="modal" ref={modalRef}>
         <span className="close" onClick={() => setOpen(false)}>
           X
         </span>
-        <h1>Add New Document</h1>
+        <h1>Dodaj Novi Ugovor</h1>
         <form onSubmit={handleSubmit}>
           <div className="item">
-            <label>Customer Name</label>
+            <label>Ime Kupca</label>
             <input
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Enter customer name"
+              placeholder="Unesite ime kupca"
             />
           </div>
           <div className="item">
-            <label>Contract Number</label>
+            <label>Broj Ugovora</label>
             <input
               type="number"
               value={contractNumber}
               onChange={(e) => setContractNumber(e.target.value)}
-              placeholder="Enter contract number"
+              placeholder="Unesite broj ugovora"
             />
           </div>
           <div className="item">
-            <label>Start Date</label>
-            <div className="date-input-container">
-              <BsCalendar className="calendar-icon" />
-              <input
-                id="datePicker"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
+            <label>Datum Početka</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
           </div>
           <div className="item">
-            <label>Delivery Date</label>
-            <div className="date-input-container">
-              <BsCalendar className="calendar-icon" />
-              <input
-                id="deliveryDatePicker"
-                type="date"
-                value={deliveryDate}
-                onChange={(e) => setDeliveryDate(e.target.value)}
-              />
-            </div>
+            <label>Rok Isporuke</label>
+            <input
+              type="date"
+              value={deliveryDate}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+            />
           </div>
-          <button type="submit">Add Document</button>
+          <button type="submit">Dodaj Ugovor</button>
         </form>
       </div>
     </div>

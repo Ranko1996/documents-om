@@ -34,7 +34,7 @@ function App() {
     <div className='grid-container'>
       <Header OpenSidebar={OpenSidebar} setContracts={setContracts} />
       {/* <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/> */}
-      <Home contracts={contracts} />
+      <Home contracts={contracts} setContracts={setContracts} />
     </div>
   )
 }

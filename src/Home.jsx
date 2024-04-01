@@ -7,7 +7,7 @@ import
  from 'recharts';
  import AccessibleTable from './components/dataTable/DataTable'
 
-function Home({contracts}) {
+function Home({contracts, setContracts}) {
   console.log(contracts);
 
     const data = [
@@ -93,9 +93,9 @@ function Home({contracts}) {
             </div>
         </div>
         
-        <AccessibleTable contracts={contracts} />
+        <AccessibleTable contracts={contracts} setContracts={setContracts} />
 
-        <div className='charts'>
+        {/* <div className='charts'>
             <ResponsiveContainer width="100%" height="100%">
             <BarChart
             width={300}
@@ -118,9 +118,9 @@ function Home({contracts}) {
                 </BarChart>
             </ResponsiveContainer>
 
-            {/* <AccessibleTable /> */}
+            <AccessibleTable />
 
-        </div>
+        </div> */}
     </main>
   )
 }
