@@ -13,6 +13,8 @@ import { BsTrash, BsPencil } from 'react-icons/bs'; // Importanje ikona
 const DataTable = ({ contracts, setContracts }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [filterStatus, setFilterStatus] = useState('ALL'); // Dodajte stanje za praćenje trenutnog filtra statusa
+    const [filterCustomerName, setFilterCustomerName] = useState(''); // Dodajte stanje za praćenje unesenog teksta za filtriranje po imenu kupca
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -52,9 +54,20 @@ const DataTable = ({ contracts, setContracts }) => {
         }
     };
     
-    
-       
-    
+    const handleFilterChange = (status) => {
+        setFilterStatus(status);
+    };
+
+    const handleCustomerNameFilterChange = (event) => {
+        setFilterCustomerName(event.target.value);
+    };
+
+    const filteredContracts = contracts.filter(contract => 
+        (filterStatus === 'ALL' || (filterStatus === 'ACTIVE' && (contract.status === 'KREIRANO' || contract.status === 'NARUČENO')) ||
+        (filterStatus === 'INACTIVE' && contract.status === 'ISPORUČENO')) &&
+        (filterCustomerName === '' || contract.kupac.toLowerCase().includes(filterCustomerName.toLowerCase()))
+    );
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -65,55 +78,63 @@ const DataTable = ({ contracts, setContracts }) => {
     };
 
     return (
-        <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
-            <Table aria-label="caption table">
-                <caption>Popis ugovora</caption>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Kupac</TableCell>
-                        <TableCell align="right">Broj ugovora</TableCell>
-                        <TableCell align="right">Rok isporuke</TableCell>
-                        <TableCell align="right">Status</TableCell>
-                        <TableCell align="center">Akcije</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {contracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell component="th" scope="row">
-                                {row.kupac}
-                            </TableCell>
-                            <TableCell align="right">{row.brojUgovora}</TableCell>
-                            <TableCell align="right">{row.rokIsporuke}</TableCell>
-                            <TableCell align="right">
-                                <Button
-                                    variant="outlined"
-                                    style={{
-                                        borderRadius: '30px',
-                                        ...getStatusClass(row.status)
-                                    }}
-                                >
-                                    {row.status}
-                                </Button>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
-                                <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
-                            </TableCell>
+        <div>
+            <Button onClick={() => handleFilterChange('ACTIVE')}>Aktivni ugovori</Button>
+            <Button onClick={() => handleFilterChange('INACTIVE')}>Neaktivni ugovori</Button>
+            <Button onClick={() => handleFilterChange('ALL')}>Svi ugovori</Button>
+
+            <input type="text" placeholder="Pretraži po imenu kupca" value={filterCustomerName} onChange={handleCustomerNameFilterChange} />
+
+            <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
+                <Table aria-label="caption table">
+                    <caption>Popis ugovora</caption>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Kupac</TableCell>
+                            <TableCell align="right">Broj ugovora</TableCell>
+                            <TableCell align="right">Rok isporuke</TableCell>
+                            <TableCell align="right">Status</TableCell>
+                            <TableCell align="center">Akcije</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={contracts.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {filteredContracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                            <TableRow key={row.id}>
+                                <TableCell component="th" scope="row">
+                                    {row.kupac}
+                                </TableCell>
+                                <TableCell align="right">{row.brojUgovora}</TableCell>
+                                <TableCell align="right">{row.rokIsporuke}</TableCell>
+                                <TableCell align="right">
+                                    <Button
+                                        variant="outlined"
+                                        style={{
+                                            borderRadius: '30px',
+                                            ...getStatusClass(row.status)
+                                        }}
+                                    >
+                                        {row.status}
+                                    </Button>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
+                                    <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredContracts.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </TableContainer>
+        </div>
     );
 }
 
