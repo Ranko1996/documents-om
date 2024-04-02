@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import './ContractCard.css'; // Ovde pretpostavljamo da ste stilove prilagodili kao što je opisano
+import './add.css'; // Učitavanje add.css fajla
 
 const ContractCardModal = ({ contract, isOpen, setOpen }) => {
   const modalRef = useRef();
@@ -20,7 +20,7 @@ const ContractCardModal = ({ contract, isOpen, setOpen }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className="add"> {/* Promenjena klasa za overlay */}
       <div className="modal" ref={modalRef}>
         <span className="close" onClick={() => setOpen(false)}>
           X

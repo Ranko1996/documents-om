@@ -10,7 +10,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
 import { BsTrash, BsPencil, BsEye, BsSearch } from 'react-icons/bs';
 import Edit from '../add/Edit'; 
-import ContractDetails from '../add/ContractDetails'; 
+import ContractCardModal from '../add/ContractDetails'; 
 import './DataTable.css'
 
 const DataTable = ({ contracts, setContracts }) => {
@@ -170,7 +170,7 @@ const DataTable = ({ contracts, setContracts }) => {
                 />
             )}
             {isViewModalOpen && selectedContract && (
-                <ContractDetails 
+                <ContractCardModal 
                     contract={selectedContract} 
                     setOpen={setIsViewModalOpen} 
                 />
