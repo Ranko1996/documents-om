@@ -12,10 +12,10 @@ function Header({ setContracts }) {
   return (
     <header className='header'>
       <div className='header-left'>
-        <div className='search-container'>
+        {/* <div className='search-container'>
           <input type='text' placeholder='Pretraga...' className='search-input' />
           <BsSearch className='search-icon' />
-        </div>
+        </div> */}
         <button className='add-document-button' onClick={handleAddModalOpen}>
           <BsPlus className='add-document-icon' />
           Dodaj dokument
