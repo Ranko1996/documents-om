@@ -14,10 +14,11 @@
 .add .modal {
   padding: 20px;
   border-radius: 15px;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* Light background for the modal */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: auto;
   max-width: 500px;
+  color: #333; /* Default dark font color for better contrast */
 }
 
 .add .modal h1 {
@@ -28,14 +29,12 @@
 
 .add .modal .close {
   position: absolute;
-  z-index: 100;
   top: 20px;
   right: 20px;
   cursor: pointer;
   font-size: 24px;
   color: #333;
 }
-
 
 .add .modal form {
   display: grid;
@@ -50,16 +49,24 @@
   flex-direction: column;
 }
 
-.add .modal form .item.full-width {
-  grid-column: 1 / -1;
-}
-
 .add .modal form .item input,
 .add .modal form .item select {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 12px;
   font-size: 16px;
+  background-color: #fff; /* Ensuring inputs and selects have a white background */
+  color: #333; /* Dark font color for inputs and selects for readability */
+}
+
+/* Ensuring labels are readable */
+.add .modal form .item label {
+  color: #333;
+}
+
+/* Styling for placeholders to ensure they are readable but subtly different */
+.add .modal form .item input::placeholder {
+  color: #666;
 }
 
 .add .modal form button {
@@ -71,16 +78,16 @@
   font-size: 16px;
   margin-top: 20px;
   cursor: pointer;
-  grid-column: 1 / -1; /* Dugme zauzima cijelu širinu */
+  grid-column: 1 / -1; /* Button spans the full width */
 }
 
-/* Responzivni dizajn za male ekrane */
+/* Responsive design for smaller screens */
 @media (max-width: 600px) {
   .add .modal form {
-    grid-template-columns: 1fr; /* Jedna kolona za male ekrane */
+    grid-template-columns: 1fr; /* Single column layout for small screens */
   }
 
   .add .modal {
-    max-width: 90%; /* Širi modal na malim ekranima */
+    max-width: 90%; /* Modal width adjusted for small screens */
   }
 }

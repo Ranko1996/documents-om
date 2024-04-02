@@ -8,13 +8,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
-import { BsTrash, BsPencil } from 'react-icons/bs'; // Importanje ikona
+import { BsTrash, BsPencil } from 'react-icons/bs'; // Importing icons
+import Edit from '../add/Edit'; // Make sure the path matches where your Edit component is located
 
 const DataTable = ({ contracts, setContracts }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [filterStatus, setFilterStatus] = useState('ALL'); // Dodajte stanje za praćenje trenutnog filtra statusa
-    const [filterCustomerName, setFilterCustomerName] = useState(''); // Dodajte stanje za praćenje unesenog teksta za filtriranje po imenu kupca
+    const [filterStatus, setFilterStatus] = useState('ALL');
+    const [filterCustomerName, setFilterCustomerName] = useState('');
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedContractId, setSelectedContractId] = useState(null);
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -30,7 +33,8 @@ const DataTable = ({ contracts, setContracts }) => {
     };
 
     const handleEdit = (id) => {
-        // Implementacija funkcije za uređivanje
+        setSelectedContractId(id);
+        setIsEditModalOpen(true);
     };
 
     const handleDelete = async (id) => {
@@ -43,9 +47,7 @@ const DataTable = ({ contracts, setContracts }) => {
                 if (!response.ok) {
                     throw new Error('Something went wrong with the deletion process');
                 }
-                // Ako je brisanje uspješno, ažurirajte stanje
                 setContracts(prevContracts => prevContracts.filter(contract => contract.id !== id));
-    
                 alert("Ugovor je uspješno izbrisan.");
             } catch (error) {
                 console.error('Failed to delete the contract:', error);
@@ -53,7 +55,7 @@ const DataTable = ({ contracts, setContracts }) => {
             }
         }
     };
-    
+
     const handleFilterChange = (status) => {
         setFilterStatus(status);
     };
@@ -82,9 +84,7 @@ const DataTable = ({ contracts, setContracts }) => {
             <Button onClick={() => handleFilterChange('ACTIVE')}>Aktivni ugovori</Button>
             <Button onClick={() => handleFilterChange('INACTIVE')}>Neaktivni ugovori</Button>
             <Button onClick={() => handleFilterChange('ALL')}>Svi ugovori</Button>
-
             <input type="text" placeholder="Pretraži po imenu kupca" value={filterCustomerName} onChange={handleCustomerNameFilterChange} />
-
             <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
                 <Table aria-label="caption table">
                     <caption>Popis ugovora</caption>
@@ -117,8 +117,12 @@ const DataTable = ({ contracts, setContracts }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
-                                    <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
+                                {row.status !== 'ISPORUČENO' && (
+                                    <>
+                                        <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
+                                        <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
+                                    </>
+                                )}
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -134,6 +138,13 @@ const DataTable = ({ contracts, setContracts }) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
+            {isEditModalOpen && (
+                <Edit 
+                    setOpen={setIsEditModalOpen} 
+                    setContracts={setContracts} 
+                    id={selectedContractId} 
+                />
+            )}
         </div>
     );
 }
