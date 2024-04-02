@@ -8,8 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
-import { BsTrash, BsPencil } from 'react-icons/bs'; // Importing icons
-import Edit from '../add/Edit'; // Make sure the path matches where your Edit component is located
+import { BsTrash, BsPencil, BsEye, BsSearch } from 'react-icons/bs';
+import Edit from '../add/Edit'; 
+import ContractDetails from '../add/ContractDetails'; 
+import './DataTable.css'
 
 const DataTable = ({ contracts, setContracts }) => {
     const [page, setPage] = useState(0);
@@ -18,6 +20,8 @@ const DataTable = ({ contracts, setContracts }) => {
     const [filterCustomerName, setFilterCustomerName] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedContractId, setSelectedContractId] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [selectedContract, setSelectedContract] = useState(null);
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -64,6 +68,11 @@ const DataTable = ({ contracts, setContracts }) => {
         setFilterCustomerName(event.target.value);
     };
 
+    const handleView = (contract) => {
+        setSelectedContract(contract);
+        setIsViewModalOpen(true);
+    };
+
     const filteredContracts = contracts.filter(contract => 
         (filterStatus === 'ALL' || (filterStatus === 'ACTIVE' && (contract.status === 'KREIRANO' || contract.status === 'NARUČENO')) ||
         (filterStatus === 'INACTIVE' && contract.status === 'ISPORUČENO')) &&
@@ -80,11 +89,25 @@ const DataTable = ({ contracts, setContracts }) => {
     };
 
     return (
-        <div>
-            <Button onClick={() => handleFilterChange('ACTIVE')}>Aktivni ugovori</Button>
-            <Button onClick={() => handleFilterChange('INACTIVE')}>Neaktivni ugovori</Button>
-            <Button onClick={() => handleFilterChange('ALL')}>Svi ugovori</Button>
-            <input type="text" placeholder="Pretraži po imenu kupca" value={filterCustomerName} onChange={handleCustomerNameFilterChange} />
+        <div style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
+ <div style={{ display: 'flex', justifyContent: 'space-between', margin: '40px auto', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <div>
+        <Button onClick={() => handleFilterChange('ACTIVE')} variant="contained" style={{ marginRight: '10px' }}>Aktivni ugovori</Button>
+        <Button onClick={() => handleFilterChange('INACTIVE')} variant="contained" style={{ marginRight: '10px' }}>Neaktivni ugovori</Button>
+        <Button onClick={() => handleFilterChange('ALL')} variant="contained">Svi ugovori</Button>
+    </div>
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+        <input 
+            type="text" 
+            className='search-input'
+            placeholder="Pretraži po imenu kupca" 
+            value={filterCustomerName} 
+            onChange={handleCustomerNameFilterChange} 
+        />
+        <BsSearch className="search-icon" />
+    </div>
+</div>
+
             <TableContainer component={Paper} style={{ maxWidth: '90%', margin: 'auto', borderRadius: '12px' }}>
                 <Table aria-label="caption table">
                     <caption>Popis ugovora</caption>
@@ -117,12 +140,13 @@ const DataTable = ({ contracts, setContracts }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell align="center">
-                                {row.status !== 'ISPORUČENO' && (
-                                    <>
-                                        <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
-                                        <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
-                                    </>
-                                )}
+                                    {row.status !== 'ISPORUČENO' && (
+                                        <>
+                                            <Button onClick={() => handleDelete(row.id)} startIcon={<BsTrash />} color="error"></Button>
+                                            <Button onClick={() => handleEdit(row.id)} startIcon={<BsPencil />}></Button>
+                                        </>
+                                    )}
+                                    <Button onClick={() => handleView(row)} startIcon={<BsEye />} color="info"></Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -143,6 +167,12 @@ const DataTable = ({ contracts, setContracts }) => {
                     setOpen={setIsEditModalOpen} 
                     setContracts={setContracts} 
                     id={selectedContractId} 
+                />
+            )}
+            {isViewModalOpen && selectedContract && (
+                <ContractDetails 
+                    contract={selectedContract} 
+                    setOpen={setIsViewModalOpen} 
                 />
             )}
         </div>

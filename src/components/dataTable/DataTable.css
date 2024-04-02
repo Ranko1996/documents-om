@@ -1,13 +1,29 @@
-.status-green {
-    background-color: green;
-    color: white;
-  }
-  
-  .status-yellow {
-    background-color: yellow;
-  }
-  
-  .status-gray {
-    background-color: gray;
-  }
-  
+
+.button-group {
+  margin-bottom: 10px;
+}
+
+.button-group button {
+  margin-right: 10px;
+}
+
+.button-group button:last-child {
+  margin-right: 0;
+}
+.search-input {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #555;
+  color: #fff;
+  width: 200px;
+  height: 20px; 
+  outline: none;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #999;
+}
