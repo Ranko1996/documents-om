@@ -1,128 +1,62 @@
-import React from 'react'
-import 
-{ BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill}
- from 'react-icons/bs'
- import 
- { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } 
- from 'recharts';
- import AccessibleTable from './components/dataTable/DataTable'
+import React from 'react';
+import { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill, BsBookFill } from 'react-icons/bs';
+import AccessibleTable from './components/dataTable/DataTable';
 
-function Home({contracts, setContracts}) {
-  console.log(contracts);
+function Home({ contracts }) {
+    // Izračunaj broj ugovora po statusima
+    const statusCounts = contracts.reduce((acc, curr) => {
+        const status = curr.status;
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+    }, {});
 
-    const data = [
-        {
-          name: 'Page A',
-          uv: 4000,
-          pv: 2400,
-          amt: 2400,
-        },
-        {
-          name: 'Page B',
-          uv: 3000,
-          pv: 1398,
-          amt: 2210,
-        },
-        {
-          name: 'Page C',
-          uv: 2000,
-          pv: 9800,
-          amt: 2290,
-        },
-        {
-          name: 'Page D',
-          uv: 2780,
-          pv: 3908,
-          amt: 2000,
-        },
-        {
-          name: 'Page E',
-          uv: 1890,
-          pv: 4800,
-          amt: 2181,
-        },
-        {
-          name: 'Page F',
-          uv: 2390,
-          pv: 3800,
-          amt: 2500,
-        },
-        {
-          name: 'Page G',
-          uv: 3490,
-          pv: 4300,
-          amt: 2100,
-        },
-      ];
-     
+    // Pretpostavljamo da su mogući statusi: KREIRANO, NARUČENO, ISPORUČENO
+    const createdCount = statusCounts["KREIRANO"] || 0;
+    const orderedCount = statusCounts["NARUČENO"] || 0;
+    const deliveredCount = statusCounts["ISPORUČENO"] || 0;
+    // Ukupan broj ugovora
+    const totalCount = contracts.length;
 
-  return (
-    <main className='main-container'>
-        <div className='main-title'>
-            <h3>DASHBOARD</h3>
-        </div>
-
-        <div className='main-cards'>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>PRODUCTS</h3>
-                    <BsFillArchiveFill className='card_icon'/>
-                </div>
-                <h1>300</h1>
+    return (
+        <main className='main-container'>
+            <div className='main-title'>
+                <h3>PRIKAZ RAČUNA</h3>
             </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>CATEGORIES</h3>
-                    <BsFillGrid3X3GapFill className='card_icon'/>
-                </div>
-                <h1>12</h1>
-            </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>CUSTOMERS</h3>
-                    <BsPeopleFill className='card_icon'/>
-                </div>
-                <h1>33</h1>
-            </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>ALERTS</h3>
-                    <BsFillBellFill className='card_icon'/>
-                </div>
-                <h1>42</h1>
-            </div>
-        </div>
-        
-        <AccessibleTable contracts={contracts} setContracts={setContracts} />
 
-        {/* <div className='charts'>
-            <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-            width={300}
-            height={300}
-            data={data}
-            margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-            }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="pv" fill="#8884d8" />
-                <Bar dataKey="uv" fill="#82ca9d" />
-                </BarChart>
-            </ResponsiveContainer>
-
-            <AccessibleTable />
-
-        </div> */}
-    </main>
-  )
+            <div className='main-cards'>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>KREIRANO</h3>
+                        <BsFillArchiveFill className='card_icon'/>
+                    </div>
+                    <h1>{createdCount}</h1>
+                </div>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>NARUČENO</h3>
+                        <BsFillArchiveFill className='card_icon'/>
+                    </div>
+                    <h1>{orderedCount}</h1>
+                </div>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>ISPORUČENO</h3>
+                        <BsFillArchiveFill className='card_icon'/>
+                    </div>
+                    <h1>{deliveredCount}</h1>
+                </div>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>UKUPNO UGOVORA</h3>
+                        <BsFillArchiveFill className='card_icon'/>
+                    </div>
+                    <h1>{totalCount}</h1>
+                </div>
+            </div>
+            
+            <AccessibleTable contracts={contracts} />
+        </main>
+    );
 }
 
-export default Home
+export default Home;
