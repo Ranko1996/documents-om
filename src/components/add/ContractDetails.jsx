@@ -1,15 +1,26 @@
 import React from "react";
-import "./add.css";
+import "./add.css"; // Pretpostavljamo da su stilovi već uključeni
 
 const ContractDetails = ({ contract, setOpen }) => {
+  const getStatusStyle = (status) => {
+    switch (status.toLowerCase()) {
+      case "isporučeno":
+        return "status isporuceno"; // Klasa za "Isporučeno"
+      case "naručeno":
+        return "status naruceno"; // Klasa za "Naručeno"
+      case "kreirano":
+        return "status kreirano"; // Klasa za "Kreirano"
+      default:
+        return "status"; // Podrazumevana klasa
+    }
+  };
+
   return (
-    <div className="add modal-overlay"> {/* Dodavanje klase za overlay */}
+    <div className="add modal-overlay">
       <div className="modal">
-        <span className="close" onClick={() => setOpen(false)}>
-          X
-        </span>
+        <span className="close" onClick={() => setOpen(false)}>X</span>
         <h1>Prikaz dokumenta</h1>
-        <div className="modal-content"> {/* Možete dodati ovu klasu u CSS ako želite specifične stilove za ovaj deo */}
+        <div className="modal-content">
           <p>ID: {contract.id}</p>
           <p>Kupac: {contract.kupac}</p>
           <p>Broj ugovora: {contract.brojUgovora}</p>
@@ -17,10 +28,11 @@ const ContractDetails = ({ contract, setOpen }) => {
           <p>Rok isporuke: {contract.rokIsporuke}</p>
           <p>Status: {contract.status}</p>
           <h2>Proizvodi:</h2>
-          <ul>
+          <ul className="product-list">
             {contract.proizvodi.map((proizvod) => (
               <li key={proizvod.id}>
-                Naziv: {proizvod.naziv}, Dobavljač: {proizvod.dobavljac}, Status: {proizvod.status}
+                Naziv: {proizvod.naziv}, Dobavljač: {proizvod.dobavljac}, 
+                <span className={getStatusStyle(proizvod.status)}>Status: {proizvod.status}</span>
               </li>
             ))}
           </ul>
